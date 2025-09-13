@@ -8,6 +8,24 @@ Dependencies
 * Compatible with the Yocto Project "scarthgap" release
 * Depends on the core `poky` layer
 
+## Build Dependencies
+
+To compile `openhd-webui`, the host machine must have the .NET 9 SDK installed.
+
+### Ubuntu 22.04:
+
+To make the WebUi work you need to add dotnet (9) to your host 
+```bash
+sudo apt update
+sudo apt install -y wget apt-transport-https software-properties-common
+wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+sudo apt update
+sudo apt install -y dotnet-sdk-9.0
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages nodejs npm -o Dpkg::Options::="--force-overwrite"
+```
+
 Adding the layer to your build
 ------------------------------
 Clone this repository into your Yocto build tree and register the layer:
