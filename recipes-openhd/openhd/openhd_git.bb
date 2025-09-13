@@ -24,19 +24,30 @@ RDEPENDS:${PN} += " \
   v4l-utils \
 "
 
-# Install and enable systemd service so OpenHD starts on boot
-SYSTEMD_SERVICE = "openhd.service"
-SYSTEMD_AUTO_ENABLE = "enable"
+SYSTEMD_SERVICE:${PN} = "openhd.service"
+SYSTEMD_AUTO_ENABLE:${PN} = "enable"
 
 do_install:append() {
     # Install systemd service
     install -d ${D}${systemd_unitdir}/system
-    install -m 0644 ${S}/systemd/system/openhd.service ${D}${systemd_unitdir}/system
+    install -m 0644 ${S}/../systemd/openhd.service ${D}${systemd_unitdir}/system
 
     # Create required directories and files
     install -d ${D}/Video
     install -d ${D}/boot/openhd
+    install -d ${D}/usr/local/share/openhd/
+    touch ${D}/usr/local/share/openhd/licence
     touch ${D}/boot/openhd/ground.txt
 }
 
-FILES:${PN} += "${bindir}/* ${systemd_unitdir}/system/openhd.service /Video /boot/openhd/ground.txt"
+FILES:${PN} += " \
+    ${bindir}/* \
+    ${systemd_unitdir}/system/openhd.service \
+    /Video \
+    /boot/openhd \
+    /boot/openhd/ground.txt \
+    /usr/local \
+    /usr/local/share \
+    /usr/local/share/openhd \
+    /usr/local/share/openhd/licence \
+"
