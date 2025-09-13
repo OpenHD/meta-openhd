@@ -22,6 +22,7 @@ RDEPENDS:${PN} += " \
   gstreamer1.0-plugins-ugly \
   gstreamer1.0-libav \
   v4l-utils \
+  openhd-webui \
 "
 
 SYSTEMD_SERVICE:${PN} = "openhd.service"
