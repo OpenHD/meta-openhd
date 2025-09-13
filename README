@@ -1,41 +1,28 @@
-This README file contains information on the contents of the meta-openhd layer.
+meta-openhd
+===========
 
-Please see the corresponding sections below for details.
+This layer provides support for building [OpenHD](https://github.com/OpenHD/OpenHD), an open-source digital video transmission system, with the Yocto Project.
 
 Dependencies
-============
+------------
+* Compatible with the Yocto Project "scarthgap" release
+* Depends on the core `poky` layer
 
-  URI: <first dependency>
-  branch: <branch name>
+Adding the layer to your build
+------------------------------
+Clone this repository into your Yocto build tree and register the layer:
 
-  URI: <second dependency>
-  branch: <branch name>
+    bitbake-layers add-layer meta-openhd
 
-  .
-  .
-  .
+Building OpenHD
+---------------
+Once the layer is added, the OpenHD application can be built with:
 
-Patches
-=======
+    bitbake openhd
 
-Please submit any patches against the meta-openhd layer to the xxxx mailing list (xxxx@zzzz.org)
-and cc: the maintainer:
+The `openhd_git.bb` recipe tracks the latest commits from the OpenHD GitHub repository. The layer sets `BB_SRCREV_POLICY = "latest"` and the recipe uses `SRCREV = "${AUTOREV}"`, ensuring the build system checks for new upstream revisions each time the recipe is executed.
 
-Maintainer: XXX YYYYYY <xxx.yyyyyy@zzzzz.com>
+Maintainer
+----------
+OpenHD Team <https://github.com/OpenHD>
 
-Table of Contents
-=================
-
-  I. Adding the meta-openhd layer to your build
- II. Misc
-
-
-I. Adding the meta-openhd layer to your build
-=================================================
-
-Run 'bitbake-layers add-layer meta-openhd'
-
-II. Misc
-========
-
---- replace with specific information about the meta-openhd layer ---
