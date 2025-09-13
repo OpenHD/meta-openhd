@@ -10,10 +10,9 @@ SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git/OpenHD"
 
-inherit cmake pkgconfig
+inherit cmake pkgconfig systemd
 
 DEPENDS = "flac poco libsodium gstreamer1.0 gstreamer1.0-plugins-base libpcap libusb1 libv4l"
-
 
 RDEPENDS:${PN} += " \
   gstreamer1.0 \
@@ -24,6 +23,19 @@ RDEPENDS:${PN} += " \
   gstreamer1.0-libav \
   v4l-utils \
 "
-FILES_${PN} += "${bindir}/*"
 
-# Install staging directory files if needed (usually automatically handled by Yocto)
+SYSTEMD_SERVICE:${PN} = "openhd.service"
+SYSTEMD_AUTO_ENABLE:${PN} = "enable"
+
+do_install:append() {
+    # Install systemd service
+    install -d ${D}${systemd_unitdir}/system
+    install -m 0644 ${S}/systemd/system/openhd.service ${D}${systemd_unitdir}/system
+
+    # Create required directories and files
+    install -d ${D}/Video
+    install -d ${D}/boot/openhd
+    touch ${D}/boot/openhd/ground.txt
+}
+
+FILES:${PN} += "${bindir}/* ${systemd_unitdir}/system/openhd.service /Video /boot/openhd/ground.txt"
