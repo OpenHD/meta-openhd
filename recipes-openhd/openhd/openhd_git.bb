@@ -24,8 +24,9 @@ RDEPENDS:${PN} += " \
   v4l-utils \
 "
 
-SYSTEMD_SERVICE:${PN} = "openhd.service"
-SYSTEMD_AUTO_ENABLE:${PN} = "enable"
+# Install and enable systemd service so OpenHD starts on boot
+SYSTEMD_SERVICE = "openhd.service"
+SYSTEMD_AUTO_ENABLE = "enable"
 
 do_install:append() {
     # Install systemd service
