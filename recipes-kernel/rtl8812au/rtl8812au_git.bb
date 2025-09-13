@@ -18,6 +18,7 @@ EXTRA_OEMAKE += "ARCH=arm64 CROSS_COMPILE=${TARGET_PREFIX} KSRC=${STAGING_KERNEL
 do_configure:append() {
     sed -i 's/^CONFIG_PLATFORM_I386_PC *= *y/CONFIG_PLATFORM_I386_PC = n/' ${S}/Makefile
     sed -i 's/^CONFIG_PLATFORM_ARM64_RPI *= *n/CONFIG_PLATFORM_ARM64_RPI = y/' ${S}/Makefile
+    sed -i '/CONFIG_PLATFORM_ARM64_RPI/,/endif/c\\include $(src)/hal/phydm/phydm.mk' ${S}/Makefile
 }
 
 do_install() {
