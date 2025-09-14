@@ -25,13 +25,13 @@ RDEPENDS:${PN} += " \
   openhd-webui \
 "
 
-SYSTEMD_SERVICE:${PN} = "openhd.service"
+SYSTEMD_SERVICE:${PN} = "openhd_mod.service"
 SYSTEMD_AUTO_ENABLE:${PN} = "enable"
 
 do_install:append() {
     # Install systemd service
     install -d ${D}${systemd_unitdir}/system
-    install -m 0644 ${S}/../systemd/openhd.service ${D}${systemd_unitdir}/system
+    install -m 0644 ${S}/../systemd/openhd_mod.service ${D}${systemd_unitdir}/system
 
     # Create required directories and files
     install -d ${D}/Video
