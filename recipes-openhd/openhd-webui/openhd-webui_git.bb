@@ -8,7 +8,10 @@ S = "${WORKDIR}/git"
 
 inherit systemd
 
-# Allow internet during do_compile for dotnet and npm
+# Node is required by the WebUI client build (ESProj)
+DEPENDS += "nodejs-native"
+
+# Allow internet during do_compile for dotnet + npm restore
 do_compile[network] = "1"
 
 # Runtime Identifier map
@@ -26,12 +29,19 @@ python __anonymous() {
     d.setVar("DOTNET_TARGET", rid)
 }
 
-# Use host-installed dotnet
+# Use dotnet from Yocto hosttools / SDK
 DOTNET_NATIVE ?= "${@bb.utils.which(d.getVar('PATH'), 'dotnet')}"
 
 do_compile() {
     if [ -z "${DOTNET_NATIVE}" ]; then
-        bbfatal "Host 'dotnet' not found. Please install dotnet-sdk-9.0 via apt."
+        bbfatal "dotnet not found in Yocto do_compile PATH"
+    fi
+
+    # Ensure native tools (node) are visible
+    export PATH="${STAGING_BINDIR_NATIVE}:${PATH}"
+
+    if ! command -v node >/dev/null 2>&1; then
+        bbfatal "node not found in Yocto do_compile PATH (expected via nodejs-native)"
     fi
 
     ${DOTNET_NATIVE} publish \
@@ -50,18 +60,16 @@ do_install() {
     install -m 0644 ${S}/openhd-web-ui.service ${D}${systemd_unitdir}/system/
 }
 
-# Runtime dependencies (fix for file-rdeps QA error)
+# Runtime dependencies
 RDEPENDS:${PN} += "zlib"
-INSANE_SKIP:${PN} += "libdir buildpaths file-rdeps"
 
-# Suppress QA warnings about library paths and build paths
-INSANE_SKIP:${PN} += "libdir buildpaths"
+# Suppress QA noise for self-contained dotnet output
+INSANE_SKIP:${PN} += "libdir buildpaths file-rdeps"
 
 # Systemd integration
 SYSTEMD_SERVICE:${PN} = "openhd-web-ui.service"
 SYSTEMD_AUTO_ENABLE:${PN} = "enable"
 
-# File list
 FILES:${PN} += " \
     /usr/local/share/openhd/web-ui/ \
     ${systemd_unitdir}/system/openhd-web-ui.service \
