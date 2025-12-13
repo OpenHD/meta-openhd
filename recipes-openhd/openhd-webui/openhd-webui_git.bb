@@ -8,37 +8,33 @@ S = "${WORKDIR}/git"
 
 inherit systemd
 
-# Allow internet access during do_compile (dotnet restore / npm)
+# Allow internet during do_compile for dotnet and npm
 do_compile[network] = "1"
 
-# Map Yocto arch → .NET Runtime Identifier
+# Runtime Identifier map
 python __anonymous() {
     arch = d.getVar("TARGET_ARCH")
-    rid_map = {
+    rid = {
         "aarch64": "linux-arm64",
-        "armv7a":  "linux-arm",
-        "x86_64":  "linux-x64",
-    }
+        "armv7a": "linux-arm",
+        "x86_64": "linux-x64"
+    }.get(arch)
 
-    rid = rid_map.get(arch)
     if not rid:
-        bb.fatal("Unsupported TARGET_ARCH '%s' for OpenHD WebUI (.NET)" % arch)
+        bb.fatal("Unsupported arch '%s' for DOTNET_TARGET" % arch)
 
     d.setVar("DOTNET_TARGET", rid)
 }
 
+# Use host-installed dotnet
+DOTNET_NATIVE ?= "${@bb.utils.which(d.getVar('PATH'), 'dotnet')}"
+
 do_compile() {
-    echo "==== OpenHD WebUI build ===="
-    echo "PATH=$PATH"
-
-    DOTNET_NATIVE="$(command -v dotnet || true)"
-    echo "DOTNET_NATIVE=$DOTNET_NATIVE"
-
-    if [ -z "$DOTNET_NATIVE" ]; then
-        bbfatal "dotnet not found in Yocto do_compile PATH"
+    if [ -z "${DOTNET_NATIVE}" ]; then
+        bbfatal "Host 'dotnet' not found. Please install dotnet-sdk-9.0 via apt."
     fi
 
-    "$DOTNET_NATIVE" publish \
+    ${DOTNET_NATIVE} publish \
         -c Release \
         -r ${DOTNET_TARGET} \
         --self-contained \
@@ -51,20 +47,21 @@ do_install() {
     cp -r ${B}/publish/* ${D}/usr/local/share/openhd/web-ui/
 
     install -d ${D}${systemd_unitdir}/system
-    install -m 0644 ${S}/openhd-web-ui.service \
-        ${D}${systemd_unitdir}/system/openhd-web-ui.service
+    install -m 0644 ${S}/openhd-web-ui.service ${D}${systemd_unitdir}/system/
 }
 
-# Runtime deps (minimal, avoid QA noise)
+# Runtime dependencies (fix for file-rdeps QA error)
 RDEPENDS:${PN} += "zlib"
-
-# Skip known-safe QA checks
 INSANE_SKIP:${PN} += "libdir buildpaths file-rdeps"
 
-# systemd integration
+# Suppress QA warnings about library paths and build paths
+INSANE_SKIP:${PN} += "libdir buildpaths"
+
+# Systemd integration
 SYSTEMD_SERVICE:${PN} = "openhd-web-ui.service"
 SYSTEMD_AUTO_ENABLE:${PN} = "enable"
 
+# File list
 FILES:${PN} += " \
     /usr/local/share/openhd/web-ui/ \
     ${systemd_unitdir}/system/openhd-web-ui.service \
