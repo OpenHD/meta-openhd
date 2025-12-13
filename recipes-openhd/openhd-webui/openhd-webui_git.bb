@@ -8,45 +8,37 @@ S = "${WORKDIR}/git"
 
 inherit systemd
 
-# Allow internet during do_compile for dotnet and npm
+# Allow internet access during do_compile (dotnet restore / npm)
 do_compile[network] = "1"
 
-# Runtime Identifier map
+# Map Yocto arch → .NET Runtime Identifier
 python __anonymous() {
     arch = d.getVar("TARGET_ARCH")
-    rid = {
+    rid_map = {
         "aarch64": "linux-arm64",
-        "armv7a": "linux-arm",
-        "x86_64": "linux-x64"
-    }.get(arch)
+        "armv7a":  "linux-arm",
+        "x86_64":  "linux-x64",
+    }
 
+    rid = rid_map.get(arch)
     if not rid:
-        bb.fatal("Unsupported arch '%s' for DOTNET_TARGET" % arch)
+        bb.fatal("Unsupported TARGET_ARCH '%s' for OpenHD WebUI (.NET)" % arch)
 
     d.setVar("DOTNET_TARGET", rid)
 }
 
-# Use host-installed dotnet
 do_compile() {
+    echo "==== OpenHD WebUI build ===="
+    echo "PATH=$PATH"
+
     DOTNET_NATIVE="$(command -v dotnet || true)"
+    echo "DOTNET_NATIVE=$DOTNET_NATIVE"
+
     if [ -z "$DOTNET_NATIVE" ]; then
-        bbfatal "Host 'dotnet' not found in do_compile PATH. (Yocto task env)"
+        bbfatal "dotnet not found in Yocto do_compile PATH"
     fi
 
     "$DOTNET_NATIVE" publish \
-        -c Release \
-        -r ${DOTNET_TARGET} \
-        --self-contained \
-        -o ${B}/publish \
-        src/OpenHdWebUi.Server/OpenHdWebUi.Server.csproj
-}
-
-do_compile() {
-    if [ -z "${DOTNET_NATIVE}" ]; then
-        bbfatal "Host 'dotnet' not found. Please install dotnet-sdk-9.0 via apt."
-    fi
-
-    ${DOTNET_NATIVE} publish \
         -c Release \
         -r ${DOTNET_TARGET} \
         --self-contained \
@@ -59,21 +51,20 @@ do_install() {
     cp -r ${B}/publish/* ${D}/usr/local/share/openhd/web-ui/
 
     install -d ${D}${systemd_unitdir}/system
-    install -m 0644 ${S}/openhd-web-ui.service ${D}${systemd_unitdir}/system/
+    install -m 0644 ${S}/openhd-web-ui.service \
+        ${D}${systemd_unitdir}/system/openhd-web-ui.service
 }
 
-# Runtime dependencies (fix for file-rdeps QA error)
+# Runtime deps (minimal, avoid QA noise)
 RDEPENDS:${PN} += "zlib"
+
+# Skip known-safe QA checks
 INSANE_SKIP:${PN} += "libdir buildpaths file-rdeps"
 
-# Suppress QA warnings about library paths and build paths
-INSANE_SKIP:${PN} += "libdir buildpaths"
-
-# Systemd integration
+# systemd integration
 SYSTEMD_SERVICE:${PN} = "openhd-web-ui.service"
 SYSTEMD_AUTO_ENABLE:${PN} = "enable"
 
-# File list
 FILES:${PN} += " \
     /usr/local/share/openhd/web-ui/ \
     ${systemd_unitdir}/system/openhd-web-ui.service \
