@@ -27,7 +27,19 @@ python __anonymous() {
 }
 
 # Use host-installed dotnet
-DOTNET_NATIVE ?= "${@bb.utils.which(d.getVar('PATH'), 'dotnet')}"
+do_compile() {
+    DOTNET_NATIVE="$(command -v dotnet || true)"
+    if [ -z "$DOTNET_NATIVE" ]; then
+        bbfatal "Host 'dotnet' not found in do_compile PATH. (Yocto task env)"
+    fi
+
+    "$DOTNET_NATIVE" publish \
+        -c Release \
+        -r ${DOTNET_TARGET} \
+        --self-contained \
+        -o ${B}/publish \
+        src/OpenHdWebUi.Server/OpenHdWebUi.Server.csproj
+}
 
 do_compile() {
     if [ -z "${DOTNET_NATIVE}" ]; then
