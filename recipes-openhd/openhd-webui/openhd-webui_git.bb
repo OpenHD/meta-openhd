@@ -2,7 +2,7 @@ SUMMARY = "OpenHD Web user interface"
 LICENSE = "Unlicense"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=d88e9e08385d2a17052dac348bde4bc1"
 
-SRC_URI = "git://github.com/OpenHD/OpenHD-WebUI.git;protocol=https;branch=development"
+SRC_URI = "git://github.com/OpenHD/OpenHD-WebUI.git;protocol=https;branch=master"
 SRCREV = "${AUTOREV}"
 S = "${WORKDIR}/git"
 
