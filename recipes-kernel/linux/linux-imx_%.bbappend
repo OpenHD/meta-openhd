@@ -6,7 +6,7 @@ SRC_URI:append = " \
 "
 
 # Pin that additional fetch to your latest commit
-SRCREV_hantro_v4l2 = "29acf0f758981b081c993ebb494fd96fdda0773c"
+SRCREV_hantro_v4l2 = "fa7026fe3cd38304882cb1c666f661ee2470c0d1"
 
 # Ensure Yocto's multi-SRCREV handling includes this extra fetch
 SRCREV_FORMAT:append = "_hantro_v4l2"
