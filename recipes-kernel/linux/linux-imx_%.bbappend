@@ -2,7 +2,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 # Fetch your replacement driver folder as an additional git "subfetch"
 SRC_URI:append = " \
-    git://github.com/raphaelscholle/hantro_v4l2.git;protocol=https;branch=main;destsuffix=hantro_v4l2;name=hantro_v4l2 \
+    git://github.com/raphaelscholle/hantro_v4l2.git;protocol=https;branch=testing_live_update;destsuffix=hantro_v4l2;name=hantro_v4l2 \
 "
 
 # Pin that additional fetch to your latest commit
