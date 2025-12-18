@@ -46,7 +46,7 @@ FILES:${PN} += " \
     ${systemd_unitdir}/system/openhd.service \
     /Video \
     /boot/openhd \
-    /boot/openhd/ground.txt \
+    /boot/openhd/air.txt \
     /usr/local \
     /usr/local/share \
     /usr/local/share/openhd \
