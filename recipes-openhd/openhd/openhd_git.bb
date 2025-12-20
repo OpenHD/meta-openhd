@@ -38,7 +38,7 @@ do_install:append() {
     install -d ${D}/boot/openhd
     install -d ${D}/usr/local/share/openhd/
     touch ${D}/usr/local/share/openhd/licence
-    touch ${D}/boot/openhd/ground.txt
+    touch ${D}/boot/openhd/air.txt
 }
 
 FILES:${PN} += " \
