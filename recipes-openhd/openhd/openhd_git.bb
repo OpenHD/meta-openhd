@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://../LICENSE;md5=1ebbd3e34237af26da5dc08a4e440464"
 
 SRC_URI = "gitsm://github.com/openhd/OpenHD.git;protocol=https;branch=dev-release"
 
-SRCREV = "08409d34bded3c255a0beeefcb962c90091d8cac"
+SRCREV = "92bc094913178c38bb3e989c5cd7afc0c09bada9"
 
 S = "${WORKDIR}/git/OpenHD"
 
