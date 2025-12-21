@@ -1,8 +1,0 @@
-# SPDX-License-Identifier: GPL-2.0-only
-# Hantro V4L2 driver (OpenHD custom)
-
-config MXC_HANTRO_V4L2
-	tristate "Hantro V4L2 encoder/decoder support"
-	depends on VIDEO_DEV
-	help
-	  Enable the OpenHD Hantro V4L2 encoder/decoder driver for i.MX.
