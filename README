@@ -38,7 +38,7 @@ Once the layer is added, the OpenHD application can be built with:
 
     bitbake openhd
 
-The `openhd_git.bb` recipe tracks the latest commits from the OpenHD GitHub repository. The layer sets `BB_SRCREV_POLICY = "latest"` and the recipe uses `SRCREV = "${AUTOREV}"`, ensuring the build system checks for new upstream revisions each time the recipe is executed.
+The `openhd_git.bb` recipe pins to the latest verified commit (`08409d34bded3c255a0beeefcb962c90091d8cac`) from the OpenHD GitHub repository to ensure reproducible builds while tracking upstream progress.
 
 Maintainer
 ----------
