@@ -8,6 +8,9 @@ SRC_URI = "gitsm://github.com/openhd/OpenHD.git;protocol=https;branch=dev-releas
 
 SRCREV = "f05dc8fff28a72bcf5c308db1b6aa59a9160963c"
 
+# Give packages a monotonic version so apt/opkg prefers newer commits.
+PV = "1.0+git${SRCPV}"
+
 S = "${WORKDIR}/git/OpenHD"
 
 inherit cmake pkgconfig systemd
