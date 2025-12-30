@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://../LICENSE;md5=1ebbd3e34237af26da5dc08a4e440464"
 
 SRC_URI = "gitsm://github.com/openhd/OpenHD.git;protocol=https;branch=dev-release"
 
-SRCREV = "f05dc8fff28a72bcf5c308db1b6aa59a9160963c"
+SRCREV = "0338167bdd6ba7415e1b84d0e9a4057a42609a12"
 
 # Give packages a monotonic version so apt/opkg prefers newer commits.
 PV = "1.0+git${SRCPV}"
