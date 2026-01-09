@@ -15,6 +15,9 @@ S = "${WORKDIR}/git/OpenHD"
 
 inherit cmake pkgconfig systemd
 
+PACKAGECONFIG ??= "webui"
+PACKAGECONFIG[webui] = ",,,openhd-webui"
+
 DEPENDS = "flac poco libsodium gstreamer1.0 gstreamer1.0-plugins-base libpcap libusb1 libv4l"
 
 RDEPENDS:${PN} += " \
@@ -25,7 +28,6 @@ RDEPENDS:${PN} += " \
   gstreamer1.0-plugins-ugly \
   gstreamer1.0-libav \
   v4l-utils \
-  openhd-webui \
 "
 
 SYSTEMD_SERVICE:${PN} = "openhd_mod.service"
