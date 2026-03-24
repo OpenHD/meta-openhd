@@ -1,0 +1,62 @@
+SUMMARY = "QOpenHD companion application"
+DESCRIPTION = "Qt-based OpenHD ground-station companion application (Qt 5 draft)"
+HOMEPAGE = "https://github.com/OpenHD/QOpenHD"
+LICENSE = "GPL-3.0-only"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=1ccabeb20df52b9236fcc6ea3d7e6f55"
+
+SRC_URI = "gitsm://github.com/OpenHD/QOpenHD.git;protocol=https;branch=2.7-evo"
+SRCREV = "f67981240797b3cb278887ada07133e49dcf5dbb"
+
+PV = "2.7-evo+git${SRCPV}"
+
+S = "${WORKDIR}/git"
+QMAKE_PROFILES = "${S}/QOpenHD.pro"
+
+# This is intentionally an example instead of an active recipe.
+# The current workspace does not provide meta-qt5 or qmake5 bbclasses.
+#
+# Once Qt 5 layer support exists, this would typically become something like:
+#   inherit qmake5_base pkgconfig
+# and, depending on the Qt 5 layer in use, may also need:
+#   inherit qmake5_paths
+
+DEPENDS += " \
+    ffmpeg \
+    gstreamer1.0 \
+    gstreamer1.0-plugins-base \
+    libdrm \
+    qtbase \
+    qtcharts \
+    qtdeclarative \
+    qtlocation \
+    qtpositioning \
+    qtspeech \
+    qttools-native \
+"
+
+RDEPENDS:${PN} += " \
+    ffmpeg \
+    fontconfig \
+    gstreamer1.0 \
+    gstreamer1.0-plugins-bad \
+    gstreamer1.0-plugins-base \
+    gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-ugly \
+    gstreamer1.0-libav \
+    libdrm \
+    openhd-sys-utils \
+    qtbase \
+    qtcharts \
+    qtdeclarative \
+    qtlocation \
+    qtpositioning \
+    qtspeech \
+"
+
+do_configure[noexec] = "1"
+do_compile[noexec] = "1"
+do_install[noexec] = "1"
+
+python () {
+    bb.note("qopenhd_git.bb.qt5-example is a draft recipe that documents the Qt 5 conversion path.")
+}

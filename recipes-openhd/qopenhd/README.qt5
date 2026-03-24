@@ -1,0 +1,39 @@
+QOpenHD Qt5 notes
+=================
+
+QOpenHD is still more naturally aligned with Qt 5:
+
+- `build_qmake.sh` exports `QT_SELECT=qt5`
+- `QOpenHD.pro` is the mature Linux build path
+- several QML files still import Qt 5 module versions such as `QtLocation 5.15`
+
+This workspace does not currently contain the layer support required to build
+that path in Yocto:
+
+- no `meta-qt5` layer is present under `sources/`
+- no `qmake5*.bbclass` is present under `sources/`
+- no `cmake_qt5*.bbclass` is present under `sources/`
+- `build-frdm/conf/bblayers.conf` enables `meta-qt6`, not `meta-qt5`
+
+The `qopenhd_git.bb.qt5-example` file is therefore only a draft recipe. It is
+not active and will not build until Qt 5 layer support is added to the BSP.
+
+To make the Qt 5 path real, the minimum missing pieces are:
+
+1. Add a Qt 5 layer compatible with this scarthgap/NXP stack.
+2. Enable that layer in `build-frdm/conf/bblayers.conf`.
+3. Provide the qmake Qt 5 class support expected by the recipe, typically one
+   of:
+   - `qmake5_base`
+   - `qmake5_paths`
+   - `cmake_qt5`
+4. Ensure the target recipes exist for the Qt 5 modules QOpenHD uses:
+   - `qtbase`
+   - `qtdeclarative`
+   - `qtlocation`
+   - `qtpositioning`
+   - `qtcharts`
+   - `qtspeech`
+   - likely `qtquickcontrols2`
+5. Re-check runtime package names for QML plugin packages, because those differ
+   between Qt 5 and Qt 6 layer implementations.
