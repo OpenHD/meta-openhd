@@ -4,7 +4,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 inherit module
 
-SRC_URI = "gitsm://github.com/OpenHD/rtl8812au.git;branch=v5.2.20;protocol=https"
+SRC_URI = "gitsm://github.com/OpenHD/rtl8812au.git;branch=v5.6.4.2;protocol=https"
 SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git"
